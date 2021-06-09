@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class BluetoothDevices extends StatefulWidget {
-  const BluetoothDevices({Key? key}) : super(key: key);
+class BluetoothDevicesPage extends StatefulWidget {
+  const BluetoothDevicesPage({Key? key}) : super(key: key);
 
   @override
-  _BluetoothDevicesState createState() => _BluetoothDevicesState();
+  _BluetoothDevicesPageState createState() => _BluetoothDevicesPageState();
 }
 
-class _BluetoothDevicesState extends State<BluetoothDevices> {
+class _BluetoothDevicesPageState extends State<BluetoothDevicesPage> {
   @override
   Widget build(BuildContext context) {
     return Container();
