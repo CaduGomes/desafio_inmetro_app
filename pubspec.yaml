@@ -21,6 +21,10 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  flutter_blue: ^0.8.0
+  asn1lib: ^1.0.2
+  pointycastle: ^3.1.1
+  provider: ^5.0.0
   flutter:
     sdk: flutter
 
@@ -28,6 +32,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +43,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  assets:
+    - assets/images/labsec-logo.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

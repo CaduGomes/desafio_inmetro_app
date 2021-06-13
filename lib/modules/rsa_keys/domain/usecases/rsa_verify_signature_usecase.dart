@@ -1,0 +1,25 @@
+import 'package:app/shared/usecases/usecases.dart';
+
+import '../entities/entities.dart';
+import '../repositories/rsa_key.dart';
+
+class VerifySignatureParams {
+  final PublicKeyEntity publickey;
+  final String data;
+  final SignatureEntity signature;
+
+  VerifySignatureParams(this.publickey, this.data, this.signature);
+}
+
+class VerifySignature
+    extends UseCase<VerifySignatureEntity, VerifySignatureParams> {
+  final RSARepository repository;
+
+  VerifySignature(this.repository);
+
+  @override
+  Future<VerifySignatureEntity> call(VerifySignatureParams params) async {
+    return repository.verifySignature(
+        params.publickey, params.data, params.signature);
+  }
+}
