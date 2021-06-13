@@ -11,7 +11,7 @@ class SignDevicesListPage extends StatelessWidget {
     final controller = context.watch<SignatureState>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Verificar assinatura"),
+        title: const Text("Assinar lista de dispositivos"),
       ),
       body: Center(
         child: Column(
@@ -25,12 +25,10 @@ class SignDevicesListPage extends StatelessWidget {
             CustomButton(
               text: "Assinar Novamente",
               onPressed: () {
-                try {
-                  controller.signData();
-                } catch (e) {
+                controller.signData().then((value) => null).catchError((err) {
                   showWarningDialog(
-                      context, "Não foi possivel assinar", e.toString(), "Ok");
-                }
+                      context, "Não foi possivel assinar", err, "Ok");
+                });
               },
             )
           ],

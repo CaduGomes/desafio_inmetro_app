@@ -1,3 +1,4 @@
+import 'package:app/modules/rsa_keys/domain/usecases/usecases.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/modules/bluetooth/state/ble_devices_state.dart';
@@ -10,42 +11,43 @@ enum UpdateState { idle, loading, error, success }
 class SignatureState extends ChangeNotifier {
   final BLEDevicesState _bleState;
   final RSAKeysState _rsaState;
+  final SignData _signData;
+  final VerifySignature _verifySignature;
 
-  SignatureEntity signature = SignatureEntity(null, null);
   bool isValid = false;
+  SignatureEntity signature = SignatureEntity(null, null);
 
   var state = UpdateState.idle;
 
-  void signData() {
+  Future signData() async {
     print("Criando assinatura");
     state = UpdateState.loading;
     notifyListeners();
-    try {
-      if (_rsaState.keys.private == null) {
-        throw Exception("Nenhuma chave foi criada");
-      }
+    if (_rsaState.keys.private == null) {
+      throw "Nenhuma chave foi criada";
+    }
 
-      if (_bleState.devices.devices.isEmpty) {
-        throw Exception("Nenhuma dispositivo foi encontrado");
-      }
+    if (_bleState.devices.devices.isEmpty) {
+      throw "Nenhuma dispositivo foi encontrado";
+    }
 
-      final sign = _rsaState.rsaRepository
-          .signData(_rsaState.keys.private!, _bleState.getDevicesIds());
+    final result = await _signData(
+        SignDataParams(_rsaState.keys.private!, _bleState.getDevicesIds()));
 
-      this.signature = sign;
+    result.fold((err) {
+      state = UpdateState.error;
+      notifyListeners();
+      throw err.message;
+    }, (data) {
+      this.signature = data;
       this.isValid = true;
       print("Assinatura criada");
       state = UpdateState.success;
       notifyListeners();
-    } catch (e) {
-      state = UpdateState.error;
-      print("Assinatura não foi criada: " + e.toString());
-      notifyListeners();
-      throw Exception(e);
-    }
+    });
   }
 
-  void verifySignature() {
+  Future verifySignature() async {
     state = UpdateState.loading;
     notifyListeners();
     print("Verificando assinatura");
@@ -57,17 +59,24 @@ class SignatureState extends ChangeNotifier {
       throw Exception("Nenhuma assinatura foi gerada");
     }
 
-    final verify = _rsaState.rsaRepository.verifySignature(
+    final result = await _verifySignature(VerifySignatureParams(
         this._rsaState.keys.public!,
         this._bleState.getDevicesIds(),
-        this.signature);
+        this.signature));
 
-    print("Assinatura é valida");
-    this.isValid = verify.isValid;
+    result.fold((err) {
+      state = UpdateState.error;
+      notifyListeners();
+      throw err.message;
+    }, (data) {
+      print("Assinatura é valida");
+      this.isValid = data.isValid;
 
-    state = UpdateState.success;
-    notifyListeners();
+      state = UpdateState.success;
+      notifyListeners();
+    });
   }
 
-  SignatureState(this._bleState, this._rsaState);
+  SignatureState(
+      this._bleState, this._rsaState, this._signData, this._verifySignature);
 }

@@ -1,4 +1,6 @@
+import 'package:app/modules/rsa_keys/domain/errors/erros.dart';
 import 'package:app/shared/usecases/usecases.dart';
+import 'package:dartz/dartz.dart';
 
 import '../entities/entities.dart';
 import '../repositories/rsa_key.dart';
@@ -11,14 +13,15 @@ class VerifySignatureParams {
   VerifySignatureParams(this.publickey, this.data, this.signature);
 }
 
-class VerifySignature
-    extends UseCase<VerifySignatureEntity, VerifySignatureParams> {
+class VerifySignature extends UseCase<
+    Either<RSAKeysError, VerifySignatureEntity>, VerifySignatureParams> {
   final RSARepository repository;
 
   VerifySignature(this.repository);
 
   @override
-  Future<VerifySignatureEntity> call(VerifySignatureParams params) async {
+  Future<Either<RSAKeysError, VerifySignatureEntity>> call(
+      VerifySignatureParams params) async {
     return repository.verifySignature(
         params.publickey, params.data, params.signature);
   }

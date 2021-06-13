@@ -7,6 +7,14 @@ import 'package:app/modules/bluetooth/state/ble_devices_state.dart';
 class UpdateButton extends StatelessWidget {
   const UpdateButton({Key? key}) : super(key: key);
 
+  searchDevicesHandler(BLEDevicesState controller, context) {
+    controller.searchDevices().then((value) {
+      print("Atualizados com sucesso!");
+    }).catchError((e) {
+      showWarningDialog(context, "Ocorreu um erro", e.toString(), "Ok");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<BLEDevicesState>();
@@ -18,7 +26,7 @@ class UpdateButton extends StatelessWidget {
               child: CircularProgressIndicator(color: Colors.blue))
           : CustomButton(
               text: "Atualizar Lista",
-              onPressed: controller.searchDevices,
+              onPressed: () => searchDevicesHandler(controller, context),
             )
     ]);
   }

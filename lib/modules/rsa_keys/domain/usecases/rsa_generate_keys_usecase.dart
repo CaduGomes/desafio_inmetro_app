@@ -1,4 +1,6 @@
+import 'package:app/modules/rsa_keys/domain/errors/erros.dart';
 import 'package:app/shared/usecases/usecases.dart';
+import 'package:dartz/dartz.dart';
 
 import '../entities/entities.dart';
 import '../repositories/rsa_key.dart';
@@ -9,13 +11,15 @@ class GenerateKeysParams {
   GenerateKeysParams(this.size);
 }
 
-class GenerateKeys extends UseCase<RSAKeysEntity, GenerateKeysParams> {
+class GenerateKeys
+    extends UseCase<Either<RSAKeysError, RSAKeysEntity>, GenerateKeysParams> {
   final RSARepository repository;
 
   GenerateKeys(this.repository);
 
   @override
-  Future<RSAKeysEntity> call(GenerateKeysParams params) async {
+  Future<Either<RSAKeysError, RSAKeysEntity>> call(
+      GenerateKeysParams params) async {
     return repository.generateKeys(params.size);
   }
 }

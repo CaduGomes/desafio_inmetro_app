@@ -25,12 +25,13 @@ class VerifySignaturePage extends StatelessWidget {
             CustomButton(
               text: "Verificar Novamente",
               onPressed: () {
-                try {
-                  controller.verifySignature();
-                } catch (e) {
+                controller
+                    .verifySignature()
+                    .then((value) => null)
+                    .catchError((err) {
                   showWarningDialog(
-                      context, "Ocorreu um problema", e.toString(), "Ok");
-                }
+                      context, "Ocorreu um problema", err.toString(), "Ok");
+                });
               },
             )
           ],

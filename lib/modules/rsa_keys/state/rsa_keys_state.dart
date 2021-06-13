@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../domain/repositories/rsa_key.dart';
+import '../domain/usecases/usecases.dart';
 import '../domain/entities/entities.dart';
 
 enum UpdateState { idle, loading, error, success }
@@ -10,25 +10,24 @@ class RSAKeysState with ChangeNotifier {
 
   var state = UpdateState.idle;
 
-  final RSARepository rsaRepository;
+  final GenerateKeys _generateKeys;
 
-  RSAKeysState(this.rsaRepository);
+  RSAKeysState(this._generateKeys);
 
-  void generateKeys(int size) {
+  Future generateKeys(int size) async {
     print("Gerando chaves");
     state = UpdateState.loading;
     notifyListeners();
-    try {
-      final data = this.rsaRepository.generateKeys(size);
-      keys = data;
+    final result = await this._generateKeys(GenerateKeysParams(size));
 
-      state = UpdateState.success;
-      notifyListeners();
-    } catch (e) {
-      print(e);
+    result.fold((err) {
       state = UpdateState.error;
       notifyListeners();
-      throw Exception(e);
-    }
+      throw err.message;
+    }, (data) {
+      keys = data;
+      state = UpdateState.success;
+      notifyListeners();
+    });
   }
 }

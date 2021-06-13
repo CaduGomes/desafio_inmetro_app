@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../domain/entities/ble_devices_list_entity.dart';
-import '../domain/repositories/ble_repository.dart';
+import '../domain/entities/entities.dart';
+import '../domain/usecases/usecases.dart';
 
 enum UpdateState { idle, loading, success, error }
 
@@ -12,34 +12,36 @@ class BLEDevicesState with ChangeNotifier {
 
   var state = UpdateState.idle;
 
-  final BLERepository _bleRepository;
+  final GetDevices _getDevices;
+  final IsAvailable _isAvailable;
 
-  BLEDevicesState(this._bleRepository);
+  BLEDevicesState(this._getDevices, this._isAvailable);
 
-  void searchDevices() async {
+  Future searchDevices() async {
     state = UpdateState.loading;
     notifyListeners();
 
-    try {
-      bool isOn = await this._bleRepository.isOn();
+    final isAvailable = await this._isAvailable();
 
-      if (!isOn) {
-        state = UpdateState.error;
-        notifyListeners();
-        throw Exception("Bluetooth desativado!");
-      }
-
-      final data = await this._bleRepository.search();
-      state = UpdateState.success;
-      devices = data;
-      _updatedAt = DateTime.now();
-
-      notifyListeners();
-    } catch (e) {
-      print(e);
+    isAvailable.fold((err) {
       state = UpdateState.error;
       notifyListeners();
-    }
+      throw err.message;
+    }, (val) async {
+      final data = await this._getDevices();
+
+      data.fold((err) {
+        print(err.message);
+        state = UpdateState.error;
+        notifyListeners();
+        throw err.message;
+      }, (data) {
+        state = UpdateState.success;
+        devices = data;
+        _updatedAt = DateTime.now();
+        notifyListeners();
+      });
+    });
   }
 
   String getUpdatedAt() {

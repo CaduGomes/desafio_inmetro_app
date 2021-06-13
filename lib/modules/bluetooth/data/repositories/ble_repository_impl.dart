@@ -1,3 +1,5 @@
+import 'package:app/modules/bluetooth/domain/errors/errors.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 
 import '../../domain/entities/entities.dart';
@@ -7,14 +9,7 @@ class BLERepositoryImpl implements BLERepository {
   static final FlutterBlue flutterBlue = FlutterBlue.instance;
 
   @override
-  Future<bool> isOn() async {
-    bool isOn = await flutterBlue.isOn;
-
-    return isOn;
-  }
-
-  @override
-  Future<BLEDevicesListEntity> search() async {
+  Future<Either<BLESearchError, BLEDevicesListEntity>> search() async {
     try {
       final List<ScanResult> data =
           await flutterBlue.startScan(timeout: Duration(seconds: 5));
@@ -26,10 +21,20 @@ class BLERepositoryImpl implements BLERepository {
             .add(BLEDeviceEntity(e.device.name, e.device.id.toString()));
       });
 
-      return devices;
-    } catch (err) {
-      print(err);
-      throw Exception(err);
+      return Right(devices);
+    } catch (e) {
+      return Left(BLESearchError("Não foi possivel buscar dispositivos"));
     }
+  }
+
+  @override
+  Future<Either<BLEDisableError, bool>> isAvailable() async {
+    bool isOn = await flutterBlue.isOn;
+
+    if (isOn) {
+      return Right(isOn);
+    }
+
+    return Left(BLEDisableError("Bluetooth desativado"));
   }
 }
