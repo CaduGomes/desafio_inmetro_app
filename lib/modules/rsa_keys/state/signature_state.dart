@@ -24,11 +24,11 @@ class SignatureState extends ChangeNotifier {
     state = UpdateState.loading;
     notifyListeners();
     if (_rsaState.keys.private == null) {
-      throw "Nenhuma chave foi criada";
+      throw "Nenhuma chave foi gerada";
     }
 
     if (_bleState.devices.devices.isEmpty) {
-      throw "Nenhuma dispositivo foi encontrado";
+      throw "A lista de dispositivos está vazia";
     }
 
     final result = await _signData(
@@ -52,11 +52,11 @@ class SignatureState extends ChangeNotifier {
     notifyListeners();
     print("Verificando assinatura");
     if (_rsaState.keys.private == null) {
-      throw Exception("Nenhuma chave foi gerada");
+      throw "Nenhuma chave foi gerada";
     }
 
     if (this.signature.signature == null) {
-      throw Exception("Nenhuma assinatura foi gerada");
+      throw "Nenhuma assinatura foi gerada";
     }
 
     final result = await _verifySignature(VerifySignatureParams(
@@ -65,12 +65,12 @@ class SignatureState extends ChangeNotifier {
         this.signature));
 
     result.fold((err) {
+      this.isValid = false;
+
       state = UpdateState.error;
       notifyListeners();
-      throw err.message;
     }, (data) {
-      print("Assinatura é valida");
-      this.isValid = data.isValid;
+      this.isValid = true;
 
       state = UpdateState.success;
       notifyListeners();

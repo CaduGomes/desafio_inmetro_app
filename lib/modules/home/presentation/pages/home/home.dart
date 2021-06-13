@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:app/shared/widgets/widgets.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
-
-  final String logoURI = 'lib/presentation/assets/images/labsec-logo.png';
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +17,13 @@ class HomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(width: 200, height: 200, child: Image.asset(logoURI)),
+              AppLogo(),
               Padding(
                 padding: EdgeInsets.only(top: 60),
                 child: Column(
                   children: [
                     CustomButton(
-                        text: "Dispositivos LBE",
+                        text: "Dispositivos BLE",
                         onPressed: () {
                           Navigator.pushNamed(context, '/bluetooth-devices');
                         }),

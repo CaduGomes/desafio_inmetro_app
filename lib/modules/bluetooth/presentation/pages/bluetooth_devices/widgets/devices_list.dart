@@ -21,11 +21,11 @@ class DevicesList extends StatelessWidget {
               decoration:
                   BoxDecoration(border: Border.all(color: Colors.black)),
               child: Container(
-                height: 400,
-                width: 200,
+                height: 250,
+                width: 250,
                 padding: const EdgeInsets.only(right: 5),
                 margin: const EdgeInsets.only(top: 3, bottom: 3),
-                child: const BuildList(),
+                child: BuildList(),
               )),
         ],
       ),
@@ -34,24 +34,37 @@ class DevicesList extends StatelessWidget {
 }
 
 class BuildList extends StatelessWidget {
-  const BuildList({Key? key}) : super(key: key);
+  BuildList({Key? key}) : super(key: key);
+  final ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<BLEDevicesState>();
-
     if (controller.devices.devices.isEmpty) {
       return NotFound();
     } else {
       return Scrollbar(
+        controller: _scrollController,
+        isAlwaysShown: true,
         radius: Radius.circular(2),
         child: ListView.builder(
+          controller: _scrollController,
           itemCount: controller.devices.devices.length,
           itemBuilder: (context, int index) {
             return Container(
               padding: const EdgeInsets.only(bottom: 25, top: 5, left: 10),
-              child: Text(
-                controller.devices.devices[index].id,
-                style: TextStyle(fontSize: 15),
+              child: Column(
+                children: [
+                  Text(
+                    controller.devices.devices[index].name == ''
+                        ? 'Dispositivo desconhecido'
+                        : controller.devices.devices[index].name,
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  Text(
+                    controller.devices.devices[index].id,
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ],
               ),
             );
           },

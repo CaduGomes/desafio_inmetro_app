@@ -4,10 +4,10 @@ import 'package:dartz/dartz.dart';
 import '../entities/entities.dart';
 
 abstract class RSARepository {
-  Either<RSAKeysError, RSAKeysEntity> generateKeys(int size);
-  Either<RSAKeysError, SignatureEntity> signData(
+  Future<Either<RSAKeysError, RSAKeysEntity>> generateKeys(int size);
+  Future<Either<RSAKeysError, SignatureEntity>> signData(
       PrivateKeyEntity privatekey, String data);
-  Either<RSAKeysError, VerifySignatureEntity> verifySignature(
+  Future<Either<RSAKeysError, VerifySignatureEntity>> verifySignature(
     PublicKeyEntity publickey,
     String data,
     SignatureEntity signature,

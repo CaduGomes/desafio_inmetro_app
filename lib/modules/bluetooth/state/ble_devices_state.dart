@@ -31,7 +31,6 @@ class BLEDevicesState with ChangeNotifier {
       final data = await this._getDevices();
 
       data.fold((err) {
-        print(err.message);
         state = UpdateState.error;
         notifyListeners();
         throw err.message;

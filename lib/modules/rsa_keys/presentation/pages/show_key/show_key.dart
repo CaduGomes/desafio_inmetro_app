@@ -1,3 +1,4 @@
+import 'package:app/modules/rsa_keys/presentation/pages/show_key/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app/shared/widgets/widgets.dart';
@@ -13,56 +14,35 @@ class ShowKeyPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Gerar chave RSA"),
       ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Center(
-          child: Column(
+      body: Column(
+        children: [
+          const AppLogo(),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 20.0),
+            padding:
+                const EdgeInsets.only(left: 5, bottom: 20, right: 20, top: 20),
+            decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                PrivateKeyView(),
+                PublicKeyView(),
+              ],
+            ),
+          ),
+          Column(
             children: [
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 20.0),
-                padding:
-                    EdgeInsets.only(left: 5, bottom: 20, right: 20, top: 20),
-                decoration:
-                    BoxDecoration(border: Border.all(color: Colors.black)),
-                child: Column(
-                  children: [
-                    Consumer<RSAKeysState>(
-                      builder: (context, instance, child) {
-                        if (instance.keys.private == null) {
-                          return Text("Nenhuma chave gerada");
-                        }
-
-                        return Column(
-                          children: [
-                            Text(
-                                "Chave Pública: ${instance.keys.public!.base64}"),
-                            Text(
-                                "Chave Privada: ${instance.keys.private!.base64}"),
-                          ],
-                        );
-                      },
-                    ),
-
-                    // Text("Chave Privada: " +
-                    //     (RSAKeysState.instance.keys.private == null
-                    //         ? "Nenhuma chave gerada!"
-                    //         : RSAKeysState.instance.keys.private!.base64)),
-                    // Text("Chave Pública: " +
-                    //     (RSAKeysState.instance.keys.public == null
-                    //         ? "Nenhuma chave gerada!"
-                    //         : RSAKeysState.instance.keys.public!.base64))
-                  ],
-                ),
-              ),
               CustomButton(
-                text: "Gerar nova chave",
-                onPressed: () {
-                  Navigator.pushNamed(context, "/generate-key");
-                },
-              )
+                  text: "Gerar nova chave",
+                  onPressed: () =>
+                      Navigator.pushNamed(context, "/generate-key")),
+              CustomButton(
+                text: "Voltar",
+                onPressed: () => Navigator.pop(context),
+              ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }

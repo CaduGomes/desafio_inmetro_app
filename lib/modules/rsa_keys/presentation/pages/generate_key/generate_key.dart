@@ -1,8 +1,7 @@
-import 'package:app/modules/rsa_keys/state/rsa_keys_state.dart';
-import 'package:app/shared/widgets/custom_button.dart';
-import 'package:app/shared/widgets/warning_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:app/shared/widgets/widgets.dart';
+
+import 'widgets/widgets.dart';
 
 class GenerateKeyPage extends StatefulWidget {
   const GenerateKeyPage({Key? key}) : super(key: key);
@@ -12,36 +11,7 @@ class GenerateKeyPage extends StatefulWidget {
 }
 
 class _GenerateKeyPageState extends State<GenerateKeyPage> {
-  generateKeysHandler() async {
-    if (text.isEmpty) {
-      showWarningDialog(context, "Entrada inválida",
-          "O valor do tamanho não pode ser vazio", "Ok");
-      return;
-    }
-
-    await Provider.of<RSAKeysState>(context, listen: false)
-        .generateKeys(int.parse(text))
-        .then((value) {
-      print("ok");
-    }).catchError((err) {
-      print("Teste");
-      showWarningDialog(context, "Ocorre um erro", err, "Ok");
-    });
-  }
-
   String text = "";
-
-  @override
-  // void initState() {
-  //   super.initState();
-  //   _controller = TextEditingController();
-  // }
-
-  // @override
-  // void dispose() {
-  //   _controller.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +20,11 @@ class _GenerateKeyPageState extends State<GenerateKeyPage> {
         title: Text("Gerar nova chave"),
       ),
       body: Container(
-        padding: EdgeInsets.all(20),
+        height: MediaQuery.of(context).size.height * 0.7,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            AppLogo(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -74,9 +45,16 @@ class _GenerateKeyPageState extends State<GenerateKeyPage> {
                 ),
               ],
             ),
-            CustomButton(
-              text: "Gerar chave",
-              onPressed: generateKeysHandler,
+            Column(
+              children: [
+                GenerateButton(
+                  text: text,
+                ),
+                CustomButton(
+                  text: "Voltar",
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
             )
           ],
         ),

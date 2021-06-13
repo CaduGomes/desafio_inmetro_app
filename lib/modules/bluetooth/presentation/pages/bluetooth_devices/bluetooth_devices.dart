@@ -1,3 +1,4 @@
+import 'package:app/shared/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'widgets/widgets.dart';
 
@@ -18,8 +19,17 @@ class _BluetoothDevicesPageState extends State<BluetoothDevicesPage> {
       body: Center(
         child: Column(
           children: [
+            AppLogo(),
             DevicesList(),
-            UpdateButton(),
+            Column(
+              children: [
+                UpdateButton(),
+                CustomButton(
+                  text: "Voltar",
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
           ],
         ),
       ),
