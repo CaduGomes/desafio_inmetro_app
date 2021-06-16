@@ -12,14 +12,14 @@ class HomePage extends StatelessWidget {
           title: Text("Desafio APP"),
         ),
         body: Container(
-          height: double.infinity,
           width: double.infinity,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               AppLogo(),
               Padding(
-                padding: EdgeInsets.only(top: 60),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.15),
                 child: Column(
                   children: [
                     CustomButton(

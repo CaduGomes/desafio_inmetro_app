@@ -16,21 +16,23 @@ class _BluetoothDevicesPageState extends State<BluetoothDevicesPage> {
       appBar: AppBar(
         title: Text("Dispositivos BLE"),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            AppLogo(),
-            DevicesList(),
-            Column(
-              children: [
-                UpdateButton(),
-                CustomButton(
-                  text: "Voltar",
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              AppLogo(),
+              DevicesList(),
+              Column(
+                children: [
+                  UpdateButton(),
+                  CustomButton(
+                    text: "Voltar",
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

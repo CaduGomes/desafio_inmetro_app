@@ -19,44 +19,48 @@ class _GenerateKeyPageState extends State<GenerateKeyPage> {
       appBar: AppBar(
         title: Text("Gerar nova chave"),
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height * 0.7,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            AppLogo(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text("Tamanho da chave: "),
-                SizedBox(
-                  width: 100,
-                  height: 40,
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Tamanho',
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.7,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AppLogo(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text("Tamanho da chave: "),
+                  SizedBox(
+                    width: 100,
+                    height: 40,
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Tamanho',
+                      ),
+                      onChanged: (val) {
+                        setState(() {
+                          text = val;
+                        });
+                      },
                     ),
-                    onChanged: (val) {
-                      text = val;
-                    },
                   ),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                GenerateButton(
-                  text: text,
-                ),
-                CustomButton(
-                  text: "Voltar",
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            )
-          ],
+                ],
+              ),
+              Column(
+                children: [
+                  GenerateButton(
+                    text: text,
+                  ),
+                  CustomButton(
+                    text: "Voltar",
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
